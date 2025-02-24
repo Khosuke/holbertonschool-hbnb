@@ -1,0 +1,70 @@
+classDiagram
+    class User {
+        +String Firstname
+        +String Lastname
+        -String Password
+        -String Email
+        +int DateOfCreation
+        +int DateOfUpdate
+        +int id
+        -boolean Admin
+        +CreateAccount()
+        +Login()
+        +ChangePassword()
+        +CreatePlace()
+        +CreateReview()
+        +RentAPlace()
+        +RemovePlace()
+        +AddAmenity()
+        -GetPassword()
+        -SetPassword(Password)
+        -GetAdmin()
+        -SetAdmin(isAdmin)
+        -GetEmail()
+        -SetEmail(Email)
+    }
+
+    class Place {
+        +String TypeOfPlace
+        +int Price
+        +int Longitude
+        +int Latitude
+        +int id
+        +int DateOfCreation
+        +int DateOfUpdate
+        +UpdatePlace()
+        +CreatePlace()
+        +RemovePlace()
+    }
+
+    class Review {
+        +String PlaceID
+        +String UserID
+        +int id
+        +float Rating
+        +String Comment
+        +int DateOfCreation
+        +int DateOfUpdate
+        +CreateReview()
+    }
+
+    class Amenities {
+        +int id
+        +String Name
+        +int DateOfCreation
+        +int DateOfUpdate
+        +CreateAmenity()
+    }
+
+    class Amenity_Place {
+        +int PlaceID
+        +int AmenityID
+    }
+
+    User "1" *-- "n" Place : creates >
+    User "1" --> "n" Review : writes >
+    Place "1" *-- "n" Review : receives >
+    Place "n" o-- "n" Amenities : has >
+    Amenity_Place "n" --* "1" Place
+    Amenity_Place "n" --* "1" Amenities
+

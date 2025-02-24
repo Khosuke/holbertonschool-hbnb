@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant User as User
+    participant API as API
+    participant BusinessLogic as BusinessLogic
+    participant Database as DataBase
+
+    User ->>+ API: GET places (criteria parameters)
+    API ->>+ BusinessLogic: fetchPlaces(criteria)
+    BusinessLogic ->>+ BusinessLogic: Check Criterias
+
+    alt Valid Criteria
+        BusinessLogic ->> Database: Select Places where criteria is found
+        Database -->> BusinessLogic: Return matching places
+        
+        alt Places Found
+            BusinessLogic ->> BusinessLogic: Format data
+            BusinessLogic -->> API: Return places list
+            API -->> User: 200 OK Places JSON Response
+        else No Places Found
+            BusinessLogic -->> API: Empty result
+            API -->> User: 200 Return Empty Places List
+        end
+
+    else Invalid Criteria
+        BusinessLogic -->> API: Invalid criteria error
+        API -->> User: 400 Bad Request
+
+    else Database Error
+        BusinessLogic ->> Database: Handle Error
+        Database -->> BusinessLogic: Database Error
+        BusinessLogic -->> API: Error Details
+        API -->> User: 500 Internal Server Error
+    end

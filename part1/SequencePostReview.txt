@@ -1,0 +1,32 @@
+sequenceDiagram
+  participant User as User
+  participant API as API
+  participant BusinessLogic as BusinessLogic
+  participant Database as Database
+
+  User ->> API: POST /reviews (Submit Review)
+  API ->> API: Verify Authentication
+  alt User is Not Logged In
+    API -->> User: 401 Unauthorized
+  else User is Authenticated
+    API ->>+ BusinessLogic: Validate and Process Review
+    BusinessLogic ->> BusinessLogic: Validate Review Content
+    alt Review Validation Succeeds
+      BusinessLogic ->> Database: INSERT INTO reviews
+      alt Database Insertion Succeeds
+        Database -->> BusinessLogic: Success (ReviewID)
+        BusinessLogic -->> API: Return ReviewID
+        API -->> User: 201 Created (ReviewID)
+      else Database Insertion Fails
+        BusinessLogic ->> Database: Handle Error
+        Database -->> BusinessLogic: Database Error
+        BusinessLogic -->> API: Database Error Details
+        API -->> User: 500 Internal Server Error
+      end
+    else Review Validation Fails
+      BusinessLogic -->> API: Validation Errors
+      API -->> User: 400 Bad Request (Validation Details)
+    end
+  end
+
+

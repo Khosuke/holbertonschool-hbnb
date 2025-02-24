@@ -1,0 +1,22 @@
+participant User as User
+  participant API as API
+  participant BusinessLogic as BusinessLogic
+  participant DataBase as DataBase
+  User ->> API: Post / Createplace (Data)
+  API ->> BusinessLogic: Validate Data
+  BusinessLogic ->> BusinessLogic: check Data requirement
+  alt Data is valide
+    BusinessLogic ->> DataBase: created new place
+    DataBase -->> BusinessLogic: place created
+    BusinessLogic -->> API: Place Id
+    API -->> User: place created Code statut 201
+    else Data Invalide
+      DataBase -->> BusinessLogic: Invalide Data
+      BusinessLogic -->> API: Place Data Error
+      API -->> User: Error 400 (Bad request)
+    else DataBase Error
+    BusinessLogic ->> DataBase: Handle Error
+    DataBase -->> BusinessLogic: DataBase Error
+    BusinessLogic -->> API: Error Details
+      API -->> User: Error 500 (internal served Error)
+    end
