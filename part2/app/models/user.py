@@ -3,16 +3,14 @@
 create a user class
 """
 
-from base_model import BaseModel
-from place import Place
-
+from app.models.base_model import BaseModel
 
 class User(BaseModel):
     """
     create a new_user
     """
 
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+    def __init__(self, first_name, last_name, email, is_admin=False):
         """
         initialize inscription new user
         """
