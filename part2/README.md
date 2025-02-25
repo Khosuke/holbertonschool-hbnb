@@ -7,7 +7,36 @@ This project aims to create a well-organized structure for a scalable applicatio
 
 ### Directory Structure
 The project is organized as follows:
-XXXXXXXXXXXXXXXXXX
+
+```
+hbnb/
+├── app/
+│   ├── __init__.py
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── v1/
+│   │       ├── __init__.py
+│   │       ├── users.py
+│   │       ├── places.py
+│   │       ├── reviews.py
+│   │       ├── amenities.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── place.py
+│   │   ├── review.py
+│   │   ├── amenity.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── facade.py
+│   ├── persistence/
+│       ├── __init__.py
+│       ├── repository.py
+├── run.py
+├── config.py
+├── requirements.txt
+├── README.md
+```
 
 ### Setup Instructions
 1. **Initialize Python Packages**: Ensure each directory intended to be a Python package contains an empty `__init__.py` file.
@@ -18,10 +47,12 @@ XXXXXXXXXXXXXXXXXX
 ### Running the Application
 To run the application, execute the following command:
 ```bash
-python run.py```
+python run.py
+```
 
-Configuration
-Create a config.py file in the root directory for environment-specific settings:
+### Configuration
+Create a `config.py` file in the root directory for environment-specific settings:
+```python
 import os
 
 class Config:
@@ -35,3 +66,26 @@ config = {
     'development': DevelopmentConfig,
     'default': DevelopmentConfig
 }
+```
+
+### Install Required Packages
+List the Python packages needed for the project in `requirements.txt`:
+```
+flask
+flask-restx
+```
+Install the dependencies using:
+```bash
+pip install -r requirements.txt
+```
+
+### Future Enhancements
+- Implement the Persistence layer using SQL Alchemy.
+- Add more API endpoints for additional functionalities.
+
+## Requirements
+List all the Python packages needed for the project in `requirements.txt`.
+
+## License
+This project is licensed under the MIT License.
+```
