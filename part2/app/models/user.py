@@ -11,7 +11,7 @@ class User(BaseModel):
     create a new_user
     """
 
-    def __init__(self, first_name, last_name, email, password, is_admin=False):
+    def __init__(self, id, first_name, last_name, email, password, is_admin=False):
         """
         initialize inscription new user
         """
@@ -23,6 +23,7 @@ class User(BaseModel):
 
         super().__init__()
 
+        self.id = id
         self.first_name = first_name
         self.last_name = last_name
         self.__email = email

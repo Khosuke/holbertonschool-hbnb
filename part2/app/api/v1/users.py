@@ -9,7 +9,7 @@ user_model = api.model('User', {
     'first_name': fields.String(required=True, description="First name of the user"),
     'last_name': fields.String(required=True, description="Last name of the user"),
     'email': fields.String(required=True, description="Email of the user"),
-    'password': fields.String(required=True, description="User password")
+    'password': fields.String(required=True, description="Password of the user")
 })
 
 
@@ -30,7 +30,6 @@ class UserList(Resource):
             return {'error': 'Email already registered'}, 400
 
         new_user = facade.create_user(user_data)
-
         return {
             'id': new_user.id,
             'first_name': new_user.first_name,
@@ -75,11 +74,12 @@ class UserResource(Resource):
             return {"error": "User not found"}, 404
 
         new_user_data = api.payload
-        user.first_name = new_user_data.get('first_name', user.first_name)
-        user.last_name = new_user_data.get('last_name', user.last_name)
-        user.email = new_user_data.get('email', user.email)
 
-        facade.put_user(user_id, new_user_data)
+        user.first_name = new_user_data.get('first_name')
+        user.last_name = new_user_data.get('last_name')
+        user.email = new_user_data.get('email')
+
+        facade.put_user(user_id, user)
 
         return {
             'id': user.id,
