@@ -3,8 +3,7 @@
 create a user class
 """
 
-from base_model import BaseModel
-from place import Place
+from app.models.base_model import BaseModel
 
 
 class User(BaseModel):
@@ -27,7 +26,7 @@ class User(BaseModel):
         self.first_name = first_name
         self.last_name = last_name
         self.__email = email
-        # self.__password = password
+        self.__password = password
         self.__is_admin = is_admin
         self.reviews = []
         self.places = []
@@ -46,23 +45,23 @@ class User(BaseModel):
         """
         self.__email = value
 
-    """
+    
     @property
     def password(self):
-
+        """
         Return a password (hidden)
-
-        return
+        """
+        return self.__password
 
     @password.setter
     def password(self, value):
-
+        """
         Define a new password
-
+        """
         if len(value) < 6:
             raise ValueError("the password must be have minimum six character")
-            self.__password = value
-    """
+        self.__password = value
+
     @property
     def is_admin(self):
         """
