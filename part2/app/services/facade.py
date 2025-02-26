@@ -24,10 +24,21 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data):
         # Placeholder for logic to update an amenity
-        amenity = self.amenity_repo.get(amenity_id)
-        if amenity:
-            for key, value in amenity_data.items():
-                setattr(amenity, key, value)
-            self.amenity_repo.update(amenity)
-            return amenity
-        return None
+            self.amenity_repo.update(amenity_id, amenity_data)
+            return self.amenity_repo.get(amenity_id)
+
+    def create_place(self, place_data):
+    # Placeholder for logic to create a place, including validation for price, latitude, and longitude
+        pass
+
+    def get_place(self, place_id):
+    # Placeholder for logic to retrieve a place by ID, including associated owner and amenities
+        pass
+
+    def get_all_places(self):
+    # Placeholder for logic to retrieve all places
+        pass
+
+    def update_place(self, place_id, place_data):
+    # Placeholder for logic to update a place
+        pass
