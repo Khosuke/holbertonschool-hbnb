@@ -13,6 +13,10 @@ class Amenity(BaseModel):
     """
     def __init__(self, name):
         super().__init__()
+        if not name or len(name) > 50:
+            raise ValueError(
+                "The name of the amenity must be provided\
+                    and must not exceed 50 characters.")
         self.name = name
         self.place = []
 

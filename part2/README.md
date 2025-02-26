@@ -88,4 +88,3 @@ List all the Python packages needed for the project in `requirements.txt`.
 
 ## License
 This project is licensed under the MIT License.
-```
