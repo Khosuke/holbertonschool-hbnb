@@ -17,30 +17,37 @@ user_model = api.model('User', {
 class UserList(Resource):
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
-    @api.response(400, 'email already register')
-    @api.response(400, 'Invalid input data')
+    @api.response(400, 'Error user')
     def post(self):
         """
         create a new user
         """
         user_data = api.payload
 
+        if not all((user_data.get('first_name'), user_data.get('last_name'), user_data.get('email'), user_data.get('password'))):
+            return {"error": "Missing required fields"}, 400
+
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
 
-        new_user = facade.create_user(user_data)
+        try:
+            new_user = facade.create_user(user_data)
+        except Exception as e:
+            print(f"Error creating user: {e}")
+            return {"error": "User not created"}, 400
+
         return {
-            'id': new_user.id,
-            'first_name': new_user.first_name,
-            'last_name': new_user.last_name,
-            'email': new_user.email
-            }, 201
+                'id': new_user.id,
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
+                'email': new_user.email
+                }, 201
 
 @api.route('/<user_id>')
 class UserResource(Resource):
     """
-    fetch user information by it's user ID
+    Get by user ID
     """ 
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
@@ -48,7 +55,11 @@ class UserResource(Resource):
         """
         Get user by ID
         """
-        user = facade.get_user(user_id)
+        try:
+            user = facade.get_user(user_id)
+        except Exception as e:
+            print(f"Error retrieving user: {e}")
+            return {"error": "An error occurred"}, 500
 
         if user is None:
             return {"error": "User not found"}, 404
@@ -68,10 +79,13 @@ class UserResource(Resource):
         """
         Update already exist users
         """
-        user = facade.get_user(user_id)
-
-        if user is None:
-            return {"error": "User not found"}, 404
+        try:
+            user = facade.get_user(user_id)
+            if user is None:
+                return {"error": "User not found"}, 404
+        except Exception as e:
+            print(f"Invalid input data: {e}")
+            return {"error": "An error occurred"}, 500
 
         new_user_data = api.payload
 
@@ -79,7 +93,14 @@ class UserResource(Resource):
         user.last_name = new_user_data.get('last_name')
         user.email = new_user_data.get('email')
 
-        facade.put_user(user_id, user)
+        if 'password' in new_user_data:
+            user.password = new_user_data['password']
+
+        try:
+            facade.put_user(user_id, user)
+        except Exception as e:
+            print(f"Error updating user: {e}")
+            return {"error": "Internal server error"}, 500
 
         return {
             'id': user.id,

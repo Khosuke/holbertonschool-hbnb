@@ -18,8 +18,7 @@ class User(BaseModel):
         if not isinstance(first_name, str) or not isinstance(last_name, str):
             raise TypeError("The first name and last name must be strings")
         if len(first_name) > 50 or len(last_name) > 50:
-            raise ValueError(
-                " First name and Last name must be less than 50 characters")
+            raise ValueError(" First name and Last name must be less than 50 characters")
 
         super().__init__()
 

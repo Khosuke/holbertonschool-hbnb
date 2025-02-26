@@ -1,7 +1,7 @@
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 import uuid
-
+from flask_restx import abort
 
 class HBnBFacade:
     def __init__(self):
@@ -16,7 +16,7 @@ class HBnBFacade:
         """
         existing_user = self.get_user_by_email(user_data['email'])
         if existing_user:
-            raise ValueError("Email already registered")
+            abort(400, message="Email already registered")
 
         user_id = str(uuid.uuid4())
         user = User(id=user_id, **user_data)
@@ -24,6 +24,9 @@ class HBnBFacade:
         return user 
 
     def get_user_by_email(self, email):
+        """
+        Fetch user by email 
+        """
         return self.user_repo.get_by_attribute('email', email)
     
     def get_place(self, place_id):
@@ -37,7 +40,7 @@ class HBnBFacade:
         """
         user = self.user_repo.get(user_id)
         if not user:
-            raise ValueError("User not found")
+            abort(404, message="User not found")
         return user
 
     def put_user(self, user_id, user):
@@ -47,7 +50,7 @@ class HBnBFacade:
         """
         existing_user = self.get_user(user_id)
         if not existing_user:
-            raise ValueError("User not found")
+            abort(404, message="User not found")
         
         user_data = {
             'first_name': user.first_name,
@@ -55,5 +58,12 @@ class HBnBFacade:
             'email': user.email
         }
 
-        self.user_repo.update(existing_user.id, user_data)
-        return user
+        if 'email' in user_data:
+            existing_user_by_email = self.get_user_by_email(user_data['email'])
+            if existing_user_by_email and existing_user_by_email.id != user_id:
+                abort(400, message="Email is already registered with another user")
+        try:
+            self.user_repo.update(existing_user.id, user_data)
+        except Exception as e:
+            abort(500, message=f"Error updating user: {e}")
+
