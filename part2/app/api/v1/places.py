@@ -1,9 +1,10 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 
+
 api = Namespace('places', description='Place operations')
 
-# Define the models for related entities
+
 amenity_model = api.model('PlaceAmenity', {
     'id': fields.String(description='Amenity ID'),
     'name': fields.String(description='Name of the amenity')
@@ -16,7 +17,7 @@ user_model = api.model('PlaceUser', {
     'email': fields.String(description='Email of the owner')
 })
 
-# Define the place model for input validation and documentation
+
 place_model = api.model('Place', {
     'title': fields.String(required=True, description='Title of the place'),
     'description': fields.String(description='Description of the place'),
@@ -34,14 +35,20 @@ class PlaceList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new place"""
-        # Placeholder for the logic to register a new place
-        pass
+        place_data = api.payload
+        new_place = facade.create_place(place_data)
+        return {'id': new_place.id, 'title': new_place.title, 'description': new_place.description,\
+                'price': new_place.price, 'latitude': new_place.latitude,\
+                    'longitude': new_place.longitude, 'owner_id': new_place.owner_id}
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
-        # Placeholder for logic to return a list of all places
-        pass
+        try:
+            place_list = facade.get_all_places()
+            return place_list
+        except Exception as e:
+            return {'error': str(e)}, 400
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
@@ -49,8 +56,11 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get place details by ID"""
-        # Placeholder for the logic to retrieve a place by ID, including associated owner and amenities
-        pass
+        try:
+            place = facade.get_place(place_id)
+            return place
+        except Exception as e:
+            return {'error': str(e)}, 400
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
@@ -58,5 +68,12 @@ class PlaceResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """Update a place's information"""
-        # Placeholder for the logic to update a place by ID
-        pass
+        place_data = api.payload
+        old_place = facade.get_place(place_id)
+        if not old_place:
+            return {'error': 'Place not found'}, 400
+        try:
+            updated_place = facade.update_place(place_id, place_data)
+            return updated_place
+        except Exception as e:
+            return {'error': str(e)}, 400

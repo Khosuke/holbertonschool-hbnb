@@ -55,15 +55,9 @@ class UserResource(Resource):
         """
         Get user by ID
         """
-        try:
-            user = facade.get_user(user_id)
-        except Exception as e:
-            print(f"Error retrieving user: {e}")
-            return {"error": "An error occurred"}, 500
-
+        user = facade.get_user(user_id)
         if user is None:
             return {"error": "User not found"}, 404
-
         return {
             'id': user.id,
             'first_name': user.first_name,
@@ -79,32 +73,16 @@ class UserResource(Resource):
         """
         Update already exist users
         """
-        try:
-            user = facade.get_user(user_id)
-            if user is None:
-                return {"error": "User not found"}, 404
-        except Exception as e:
-            print(f"Invalid input data: {e}")
-            return {"error": "An error occurred"}, 500
+        user_data = api.payload
+        user = facade.get_user(user_id)
+        if user is None:
+            return {"error": "User not found"}, 404
 
-        new_user_data = api.payload
-
-        user.first_name = new_user_data.get('first_name')
-        user.last_name = new_user_data.get('last_name')
-        user.email = new_user_data.get('email')
-
-        if 'password' in new_user_data:
-            user.password = new_user_data['password']
-
-        try:
-            facade.put_user(user_id, user)
-        except Exception as e:
-            print(f"Error updating user: {e}")
-            return {"error": "Internal server error"}, 500
-
+        facade.update_user(user_id, user_data)
+        updated_user = facade.get_user(user_id)
         return {
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email
-        }, 200
+                'id': updated_user.id,
+                'first_name': updated_user.first_name,
+                'last_name': updated_user.last_name,
+                'email': updated_user.email
+                }, 201

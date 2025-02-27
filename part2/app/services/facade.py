@@ -1,8 +1,8 @@
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.place import Place
-import uuid
-from flask_restx import abort
+from app.models.review import Review
+from app.models.amenity import Amenity
 
 class HBnBFacade:
     def __init__(self):
@@ -26,7 +26,7 @@ class HBnBFacade:
         """
         user = self.user_repo.get(user_id)
         if not user:
-            abort(404, message="User not found")
+            return {"error": "User not found"}, 404
         return user
 
     def get_user_by_email(self, email):
@@ -36,29 +36,34 @@ class HBnBFacade:
         return self.user_repo.get_by_attribute('email', email)
     
 
-    def put_user(self, user_id, user):
+    def update_user(self, user_id, user_data):
         """
-        update existing users and
-        verify without deleted another existing value
+        update existing users
         """
-        existing_user = self.get_user(user_id)
-        if not existing_user:
-           return {"Error": str(e)}, 404
-        
-        user_data = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email
-        }
+        self.user_repo.update(user_id, user_data)
+        updated_user = self.user_repo.get(user_id)
+        return updated_user
 
-        if 'email' in user_data:
-            existing_user_by_email = self.get_user_by_email(user_data['email'])
-            if existing_user_by_email and existing_user_by_email.id != user_id:
-                return {"Error": str(e)}, 400
-        try:
-            self.user_repo.update(existing_user.id, user_data)
-        except Exception as e:
-            return {"Error": str(e)}, 400
+    def create_amenity(self, amenity_data):
+        amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(amenity)
+        return amenity
+
+    def get_amenity(self, amenity_id):
+        amenity = self.amenity_repo.get(amenity_id)
+        if not amenity:
+            return {"error": "Amenity not found"}, 404
+        return amenity.to_dict()
+
+    def get_all_amenities(self):
+        list = self.amenity_repo.get_all()
+        amenity_list = [amenity.to_dict() for amenity in list]
+        return amenity_list
+
+    def update_amenity(self, amenity_id, amenity_data):
+            self.amenity_repo.update(amenity_id, amenity_data)
+            updated_amenity = self.amenity_repo.get(amenity_id)
+            return updated_amenity.to_dict()
 
     def create_place(self, place_data):
         """
@@ -74,15 +79,50 @@ class HBnBFacade:
         """
         place = self.place_repo.get(place_id)
         if not place:
-            abort(404, message="Place not found")
-        return place
+            return {"error": "Place not found"}, 404
+        return place.to_dict()
 
     def get_all_places(self):
-    # Placeholder for logic to retrieve all places
-        pass
+        """
+        get all places
+        """
+        list = self.place_repo.get_all()
+        place_list = [place.to_dict() for place in list]
+        return place_list
 
     def update_place(self, place_id, place_data):
         """
-        updating places
+        update existing  places
         """
-      
+        self.place_repo.update(place_id, place_data)
+        updated_place = self.place_repo.get(place_id)
+        return updated_place.to_dict()
+
+    def create_review(self, review_data):
+        review = Review(**review_data)
+        self.review_repo.add(review)
+        return review
+
+    def get_review(self, review_id):
+        review = self.review_repo.get(review_id)
+        if not review:
+            return {"error": "Review not found"}, 404
+        return review.to_dict()
+
+    def get_all_reviews(self):
+        list = self.review_repo.get_all()
+        review_list = [review.to_dict() for review in list]
+        return review_list
+
+    def get_reviews_by_place(self, place_id):
+        place = self.place_repo.get(place_id)
+        return place["reviews"]
+
+    def update_review(self, review_id, review_data):
+        self.review_repo.update(review_id, review_data)
+        updated_review = self.review_repo.get(review_id)
+        return updated_review.to_dict()
+
+    def delete_review(self, review_id):
+        return self.review_repo.delete(review_id)
+
