@@ -86,5 +86,10 @@ pip install -r requirements.txt
 ## Requirements
 List all the Python packages needed for the project in `requirements.txt`.
 
+## Contributors
+Frédéric Iglesias Montero, email: <9814@holbertonstudents.com>
+Saïd Laamri, email: <9848@holbertonstudents.com>
+Vithushan Satkunanathan, <email: 9880@holbertonstudents.com>
+
 ## License
 This project is licensed under the MIT License.
