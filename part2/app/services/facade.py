@@ -101,7 +101,7 @@ class HBnBFacade:
     def create_review(self, review_data):
         review = Review(**review_data)
         self.review_repo.add(review)
-        return review
+        return review.to_dict()
 
     def get_review(self, review_id):
         review = self.review_repo.get(review_id)
