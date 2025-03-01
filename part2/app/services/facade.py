@@ -27,8 +27,7 @@ class HBnBFacade:
         return self.user_repo.get_by_attribute('email', email)
 
     def update_user(self, user_id, user_data):
-        existing_user = self.user_repo.get(user_id)
-        updated_user = self.user_repo.update(existing_user, user_data)
+        updated_user = self.user_repo.update(user_id, user_data)
         return updated_user
 
     def get_place(self, place_id):
@@ -45,7 +44,9 @@ class HBnBFacade:
 
 
     def get_all_places(self):
-        return self.place_repo.get_all()
+        list = self.place_repo.get_all()
+        place_list = (place.to_dict() for place in list)
+        return place_list
 
     def update_place(self, place_id, place_data):
     # Placeholder for logic to update a place
@@ -67,8 +68,8 @@ class HBnBFacade:
         return place["reviews"]
 
     def update_review(self, review_id, review_data):
-        existing_review = self.get_review(review_id)
-        updated_review = self.review_repo.update(existing_review, review_data)
+        self.review_repo.update(review_id, review_data)
+        updated_review = self.review_repo.get(review_id)
         return updated_review
 
     def delete_review(self, review_id):
