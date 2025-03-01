@@ -10,7 +10,7 @@ class User(BaseModel):
     create a new_user
     """
 
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         """
         initialize inscription new user
         """
@@ -25,7 +25,7 @@ class User(BaseModel):
         self.first_name = first_name
         self.last_name = last_name
         self.__email = email
-        # self.__password = password
+        self.__password = password
         self.__is_admin = is_admin
         self.reviews = []
         self.places = []
@@ -44,23 +44,22 @@ class User(BaseModel):
         """
         self.__email = value
 
-    """
     @property
     def password(self):
-
+        """
         Return a password (hidden)
-
-        return
+        """
+        return self.__password
 
     @password.setter
     def password(self, value):
-
+        """
         Define a new password
-
+        """
         if len(value) < 6:
             raise ValueError("the password must be have minimum six character")
-            self.__password = value
-    """
+        self.__password = value
+
     @property
     def is_admin(self):
         """

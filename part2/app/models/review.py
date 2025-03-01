@@ -2,7 +2,7 @@
 This modules defines the Review subclass
 """
 from .base_model import BaseModel
-from app.services.facade import HBnBFacade
+
 
 class Review(BaseModel):
     """
@@ -30,10 +30,6 @@ class Review(BaseModel):
             raise ValueError("Place ID must be a string")
         if not isinstance(user_id, str):
             raise ValueError("User ID must be a string")
-        if HBnBFacade.get_user(user_id) is None:
-            raise TypeError("User does not exist")
-        if HBnBFacade.get_place(place_id) is None:
-            raise TypeError("Place does not exist")
         super().__init__()
         self.text = text    
         self.rating = rating

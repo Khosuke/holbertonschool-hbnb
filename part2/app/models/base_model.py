@@ -17,3 +17,7 @@ class BaseModel:
             if hasattr(self, key):
                 setattr(self, key, value)
         self.save()  # Update the updated_at timestamp
+    
+    def is_in_range(self, value, min_value, max_value):
+        if min_value <= value <= max_value:
+            raise ValueError("")
