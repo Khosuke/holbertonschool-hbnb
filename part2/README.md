@@ -98,8 +98,8 @@ pip install -r requirements.txt
 List all the Python packages needed for the project in `requirements.txt`.
 
 ## Contributors
-Frédéric Iglesias Montero, email: <9814@holbertonstudents.com>
-Saïd Laamri, email: <9848@holbertonstudents.com>
+Frédéric Iglesias Montero, email: <9814@holbertonstudents.com><br>
+Saïd Laamri, email: <9848@holbertonstudents.com><br>
 Vithushan Satkunanathan, <email: 9880@holbertonstudents.com>
 
 ## License
