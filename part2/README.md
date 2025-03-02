@@ -37,7 +37,7 @@ hbnb/
 ├── requirements.txt
 ├── README.md
 ```
-Explanation:
+<b>Explanation:</b>
 
 The app/ directory contains the core application code.
 The api/ subdirectory houses the API endpoints, organized by version (v1/).
