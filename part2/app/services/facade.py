@@ -1,9 +1,8 @@
 from app.persistence.repository import InMemoryRepository
 from app.models.user import User
-from app.models.review import Review
 from app.models.place import Place
+from app.models.review import Review
 from app.models.amenity import Amenity
-
 
 class HBnBFacade:
     def __init__(self):
@@ -12,45 +11,94 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
-
     def create_user(self, user_data):
+        """
+        create a new user and store in memory
+        """
         user = User(**user_data)
         self.user_repo.add(user)
         return user
-
+    
+    def get_all_users(self):
+        """
+        get a list of all users
+        """
+        list = self.user_repo.get_all()
+        user_list = [user.to_dict() for user in list]
+        return user_list
 
     def get_user(self, user_id):
-        return self.user_repo.get(user_id)
-
+        """
+        get user by ID
+        return user if exist else leave error
+        """
+        user = self.user_repo.get(user_id)
+        return user
 
     def get_user_by_email(self, email):
+        """
+        Fetch user by email 
+        """
         return self.user_repo.get_by_attribute('email', email)
+    
 
     def update_user(self, user_id, user_data):
-        updated_user = self.user_repo.update(user_id, user_data)
+        """
+        update existing users
+        """
+        self.user_repo.update(user_id, user_data)
+        updated_user = self.user_repo.get(user_id)
         return updated_user
 
-    def get_place(self, place_id):
-        return self.user_repo.get(place_id)
+    def create_amenity(self, amenity_data):
+        amenity = Amenity(**amenity_data)
+        self.amenity_repo.add(amenity)
+        return amenity
 
+    def get_amenity(self, amenity_id):
+        amenity = self.amenity_repo.get(amenity_id)
+        return amenity
+
+    def get_all_amenities(self):
+        list = self.amenity_repo.get_all()
+        amenity_list = [amenity.to_dict() for amenity in list]
+        return amenity_list
+
+    def update_amenity(self, amenity_id, amenity_data):
+            self.amenity_repo.update(amenity_id, amenity_data)
+            updated_amenity = self.amenity_repo.get(amenity_id)
+            return updated_amenity
 
     def create_place(self, place_data):
-    # Placeholder for logic to create a place, including validation for price, latitude, and longitude
-        pass
-
+        """
+        create place
+        """
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
 
     def get_place(self, place_id):
-        return self.place_repo.get(place_id)
-
+        """
+        get place by ID
+        """
+        place = self.place_repo.get(place_id)
+        return place
 
     def get_all_places(self):
+        """
+        get all places
+        """
         list = self.place_repo.get_all()
-        place_list = (place.to_dict() for place in list)
+        place_list = [place.to_dict() for place in list]
         return place_list
 
     def update_place(self, place_id, place_data):
-    # Placeholder for logic to update a place
-        pass
+        """
+        update existing  places
+        """
+        self.place_repo.update(place_id, place_data)
+        updated_place = self.place_repo.get(place_id)
+        return updated_place
 
     def create_review(self, review_data):
         review = Review(**review_data)
@@ -58,14 +106,18 @@ class HBnBFacade:
         return review
 
     def get_review(self, review_id):
-        return self.review_repo.get(review_id)
+        review = self.review_repo.get(review_id)
+        return review
 
     def get_all_reviews(self):
-        return self.review_repo.get_all()
+        list = self.review_repo.get_all()
+        review_list = [review.to_dict() for review in list]
+        return review_list
 
     def get_reviews_by_place(self, place_id):
         place = self.place_repo.get(place_id)
-        return place["reviews"]
+        place_reviews = place.to_dict()['reviews']
+        return place_reviews
 
     def update_review(self, review_id, review_data):
         self.review_repo.update(review_id, review_data)
@@ -74,22 +126,3 @@ class HBnBFacade:
 
     def delete_review(self, review_id):
         return self.review_repo.delete(review_id)
-
-
-    def put_user(self, user_id, user_data):
-        """
-        update existing users and
-        verify without deleted another existing value
-        """
-        existing_user = self.get_user(user_id)
-        if not existing_user:
-            return {"error": "User not found"}, 404
-
-        if 'email' in user_data:
-            existing_user_by_email = self.get_user_by_email(user_data['email'])
-            if existing_user_by_email and existing_user_by_email.id != user_id:
-                return {"error": "Email is already registered with another user"}, 400
-        try:
-            self.user_repo.update(existing_user.id, user_data)
-        except Exception as e:
-            return {"error":  str(e)}, 400

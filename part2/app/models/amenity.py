@@ -1,7 +1,4 @@
-"""Module that defines the Amenity class."""
-
 from .base_model import BaseModel
-
 
 class Amenity(BaseModel):
     """
@@ -16,6 +13,28 @@ class Amenity(BaseModel):
         self.name = name
         self.place = []
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise TypeError('Name must be a string')
+        if not value or len(value) > 50:
+            raise ValueError("The name of the amenity must not exceed 50 characters.")
+        self._name = value
+
+    @property
+    def place(self):
+        return self._place
+
+    @place.setter
+    def place(self, value):
+        if not isinstance(value, list):
+            raise TypeError("Place must be a list")
+        self._place = value
+
     def add_place(self, place):
         """
         method that add a place to an amenity
@@ -23,3 +42,6 @@ class Amenity(BaseModel):
             -place (Place): The place to add.
         """
         self.place.append(place)
+
+    def to_dict(self):
+        return {'id': self.id, 'name': self.name}
