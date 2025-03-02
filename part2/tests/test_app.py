@@ -36,7 +36,6 @@ class TestUserEndpoints(unittest.TestCase):
         })
         self.valid_place = place1
         self.place_id = json.loads(place1.data.decode('utf-8'))['id']
-        print(f"Created place with ID: {self.place_id}")
         review1 = self.client.post('/api/v1/reviews/', json={
             "text": "Nice place",
             "rating": 4,
@@ -67,9 +66,6 @@ class TestUserEndpoints(unittest.TestCase):
 
     def test_01_create_user(self):
         response = self.valid_user
-        print(f"Response type: {type(response)}")
-        print(f"Response data: {response}")
-        print(f"Response status: {response.status_code}")
         self.assertEqual(response.status_code, 201)
 
     def test_02_create_user_invalid_data(self):
@@ -292,13 +288,7 @@ class TestUserEndpoints(unittest.TestCase):
     
     def test_30_get_reviews_by_valid_place(self):
         known_place_id = self.place_id
-        print(f"Testing with place_id: {self.place_id}")
-        url = f'/api/v1/places/{self.place_id}/reviews'
-        print(f"Request URL: {url}")
-        response = self.client.get(url)
-        print(f"Response status: {response.status_code}")
-        print(f"Response data: {response.data}")
-        response = self.client.get(f'/api/v1/places/{known_place_id }/reviews')
+        response = self.client.get(f'/api/v1/places/{known_place_id}/reviews')
         self.assertEqual(response.status_code, 200)
 
     def test_31_get_reviews_by_invalid_place(self):
