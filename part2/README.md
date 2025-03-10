@@ -37,6 +37,17 @@ hbnb/
 ├── requirements.txt
 ├── README.md
 ```
+<b>Explanation:</b>
+
+<b>The app/</b> directory contains the core application code.<br>
+<b>The api/</b> subdirectory houses the API endpoints, organized by version (v1/).<br>
+<b>The models/</b> subdirectory contains the business logic classes (e.g., user.py, place.py).<br>
+<b>The services/</b> subdirectory is where the Facade pattern is implemented, managing the interaction between layers.<br>
+<b>The persistence/</b> subdirectory is where the in-memory repository is implemented. This will later be replaced by a database-backed solution using SQL Alchemy.<br>
+<b>run.py</b> is the entry point for running the Flask application.<br>
+<b>config.py</b> will be used for configuring environment variables and application settings.<br>
+<b>requirements.txt</b> will list all the Python packages needed for the project.<br>
+<b>README.md</b> will contain a brief overview of the project.<br>
 
 ### Setup Instructions
 1. **Initialize Python Packages**: Ensure each directory intended to be a Python package contains an empty `__init__.py` file.
@@ -85,6 +96,11 @@ pip install -r requirements.txt
 
 ## Requirements
 List all the Python packages needed for the project in `requirements.txt`.
+
+## Contributors
+Frédéric Iglesias Montero, email: <9814@holbertonstudents.com><br>
+Saïd Laamri, email: <9848@holbertonstudents.com><br>
+Vithushan Satkunanathan, email: <9880@holbertonstudents.com>
 
 ## License
 This project is licensed under the MIT License.

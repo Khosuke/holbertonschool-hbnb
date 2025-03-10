@@ -1,7 +1,4 @@
-"""Module that defines the Amenity class."""
-
 from .base_model import BaseModel
-
 
 class Amenity(BaseModel):
     """
@@ -13,6 +10,8 @@ class Amenity(BaseModel):
     """
     def __init__(self, name):
         super().__init__()
+        if not isinstance(name, str):
+            raise TypeError('Name must be a string')
         if not name or len(name) > 50:
             raise ValueError(
                 "The name of the amenity must be provided\
@@ -27,3 +26,6 @@ class Amenity(BaseModel):
             -place (Place): The place to add.
         """
         self.place.append(place)
+
+    def to_dict(self):
+        return {'id': self.id, 'name': self.name}
