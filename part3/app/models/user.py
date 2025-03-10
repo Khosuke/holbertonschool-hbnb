@@ -4,12 +4,13 @@ import re
 class User(BaseModel):
     emails = set()
 
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password, is_admin=False):
         super().__init__()
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
+        self.password = password
         self.places = []
         self.reviews = []
     
@@ -53,6 +54,16 @@ class User(BaseModel):
         User.emails.add(value)
 
     @property
+    def password(self):
+        return self.__password
+    
+    @password.setter
+    def password(self, value):
+        if not isinstance(value, str):
+            raise TypeError("Password must be a string")
+        self.__password = self.hash_password(value)
+
+    @property
     def is_admin(self):
         return self.__is_admin
     
@@ -74,6 +85,16 @@ class User(BaseModel):
         """Add an amenity to the place."""
         self.reviews.remove(review)
 
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        from app import bcrypt
+        return bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """Verifies if the provided password matches the hashed password."""
+        from app import bcrypt
+        return bcrypt.check_password_hash(self.__password, password)
+    
     def to_dict(self):
         return {
             'id': self.id,
