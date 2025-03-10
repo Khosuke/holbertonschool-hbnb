@@ -12,23 +12,11 @@ bcrypt = Bcrypt()
 jwt = JWTManager()
 
 
-authorizations = {
-    'Bearer': {
-        'type': 'apiKey',
-        'in': 'header',
-        'name': 'Bearer'
-    }
-}
-
-
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     api = Api(app, version='1.0',
             title='HBnB API',
-            description='HBnB Application API',
-            authorizations=authorizations,
-            security='Authorizations'
-            )
+            description='HBnB Application API')
     app.config.from_object(config_class)
 
     bcrypt.init_app(app)
