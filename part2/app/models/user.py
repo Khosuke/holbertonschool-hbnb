@@ -4,7 +4,7 @@ create a user class
 """
 
 from app.models.base_model import BaseModel
-
+import re
 
 class User(BaseModel):
     """
@@ -15,67 +15,70 @@ class User(BaseModel):
         """
         initialize inscription new user
         """
-        if not isinstance(first_name, str) or not isinstance(last_name, str):
-            raise TypeError("The first name and last name must be strings")
-        if len(first_name) > 50 or len(last_name) > 50:
-            raise ValueError(" First name and Last name must be less than 50 characters")
-
+        verify_email = self.validate_email(email)
         super().__init__()
-
         self.first_name = first_name
         self.last_name = last_name
-        self.__email = email
+        self.__email = verify_email
         self.__password = password
         self.__is_admin = is_admin
         self.reviews = []
         self.places = []
 
     @property
+    def first_name(self):
+        return self._first_name
+
+    @first_name.setter
+    def first_name(self, value):
+        if not isinstance(value, str):
+            raise TypeError("The first name must be a string")
+        if len(value) > 50:
+            raise ValueError("First name must be less than 50 characters")
+        self._first_name = value
+
+    @property
+    def last_name(self):
+        return self._last_name
+
+    @last_name.setter
+    def last_name(self, value):
+        if not isinstance(value, str):
+            raise TypeError("The last name must be a string")
+        if len(value) > 50:
+            raise ValueError("Last name must be less than 50 characters")
+        self._last_name = value
+
+    @property
     def email(self):
-        """
-        return email of user
-        """
         return self.__email
 
     @email.setter
     def email(self, value):
-        """
-        defined a new email
-        """
+        if not self.validate_email(value):
+            raise ValueError("Invalid email format")
         self.__email = value
 
-    
     @property
     def password(self):
-        """
-        Return a password (hidden)
-        """
         return self.__password
 
     @password.setter
     def password(self, value):
-        """
-        Define a new password
-        """
-        if len(value) < 6:
-            raise ValueError("the password must be have minimum six character")
+        if len(value) < 8:
+            raise ValueError("Password must be at least 8 characters long")
         self.__password = value
 
     @property
-    def is_admin(self):
-        """
-        verify if the user is an admin
-        """
+    def is_admin(self) -> bool:
         return self.__is_admin
 
     @is_admin.setter
-    def is_admin(self, value):
-        """
-        Define the admin role
-        """
+    def is_admin(self, value: bool) -> None:
         if not isinstance(value, bool):
-            raise ValueError("is_admin must be boolean")
+            raise TypeError("is_admin must be a boolean")
         self.__is_admin = value
+
 
     def add_review(self, review):
         """
@@ -83,8 +86,40 @@ class User(BaseModel):
         """
         self.reviews.append(review)
 
+    def delete_review(self, review):
+        """
+        removes a review from the user
+        """
+        self.reviews.remove(review)
+
     def add_place(self, place):
         """
         add new place by user
         """
         self.places.append(place)
+
+    def delete_place(self, place):
+        """
+        removes a place from the user
+        """
+        self.reviews.remove(place)
+
+    def to_dict(self):
+        """
+        Return a dictionary of the object
+        """
+        return {
+                'id': self.id,
+                'first_name': self.first_name,
+                'last_name': self.last_name,
+                'email': self.email
+                }
+
+    def validate_email(self, email):
+        """
+        Verify that the email is a valid format
+        """
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        if re.match(email_regex, email):
+            return email
+        raise ValueError("Email is not in a valid format")

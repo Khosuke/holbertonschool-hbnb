@@ -17,7 +17,15 @@ class HBnBFacade:
         """
         user = User(**user_data)
         self.user_repo.add(user)
-        return user 
+        return user
+    
+    def get_all_users(self):
+        """
+        get a list of all users
+        """
+        list = self.user_repo.get_all()
+        user_list = [user.to_dict() for user in list]
+        return user_list
 
     def get_user(self, user_id):
         """
@@ -25,8 +33,6 @@ class HBnBFacade:
         return user if exist else leave error
         """
         user = self.user_repo.get(user_id)
-        if not user:
-            return {"error": "User not found"}, 404
         return user
 
     def get_user_by_email(self, email):
@@ -51,9 +57,7 @@ class HBnBFacade:
 
     def get_amenity(self, amenity_id):
         amenity = self.amenity_repo.get(amenity_id)
-        if not amenity:
-            return {"error": "Amenity not found"}, 404
-        return amenity.to_dict()
+        return amenity
 
     def get_all_amenities(self):
         list = self.amenity_repo.get_all()
@@ -63,7 +67,7 @@ class HBnBFacade:
     def update_amenity(self, amenity_id, amenity_data):
             self.amenity_repo.update(amenity_id, amenity_data)
             updated_amenity = self.amenity_repo.get(amenity_id)
-            return updated_amenity.to_dict()
+            return updated_amenity
 
     def create_place(self, place_data):
         """
@@ -78,9 +82,7 @@ class HBnBFacade:
         get place by ID
         """
         place = self.place_repo.get(place_id)
-        if not place:
-            return {"error": "Place not found"}, 404
-        return place.to_dict()
+        return place
 
     def get_all_places(self):
         """
@@ -96,18 +98,16 @@ class HBnBFacade:
         """
         self.place_repo.update(place_id, place_data)
         updated_place = self.place_repo.get(place_id)
-        return updated_place.to_dict()
+        return updated_place
 
     def create_review(self, review_data):
         review = Review(**review_data)
         self.review_repo.add(review)
-        return review.to_dict()
+        return review
 
     def get_review(self, review_id):
         review = self.review_repo.get(review_id)
-        if not review:
-            return {"error": "Review not found"}, 404
-        return review.to_dict()
+        return review
 
     def get_all_reviews(self):
         list = self.review_repo.get_all()
@@ -116,13 +116,13 @@ class HBnBFacade:
 
     def get_reviews_by_place(self, place_id):
         place = self.place_repo.get(place_id)
-        return place["reviews"]
+        place_reviews = place.to_dict()['reviews']
+        return place_reviews
 
     def update_review(self, review_id, review_data):
         self.review_repo.update(review_id, review_data)
         updated_review = self.review_repo.get(review_id)
-        return updated_review.to_dict()
+        return updated_review
 
     def delete_review(self, review_id):
         return self.review_repo.delete(review_id)
-
