@@ -17,6 +17,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     api = Api(app, version='1.0',
             title='HBnB API',
             description='HBnB Application API')
+
     app.config.from_object(config_class)
 
     bcrypt.init_app(app)
@@ -27,4 +28,10 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(places_ns, path='/api/v1/places')
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(auth_ns, path='/api/v1/auth')
+
     return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)

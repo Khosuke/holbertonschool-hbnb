@@ -1,5 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 api = Namespace('places', description='Place operations')
 
@@ -33,10 +35,16 @@ class PlaceList(Resource):
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    
+    @jwt_required()
+    @api.expect(place_model)
     def post(self):
         """Register a new place"""
+        current_user = get_jwt_identity()
         place_data = api.payload
-        owner = place_data.get('owner_id', None)
+        place_data['owner_id'] = current_user
+
+        new_place = facade.create_place(owner=current_user, **place_data)
 
         if owner is None or len(owner) == 0:
             return {'error': 'Invalid input data.'}, 400
@@ -67,14 +75,20 @@ class PlaceResource(Resource):
             return {'error': 'Place not found'}, 404
         return place.to_dict_list(), 200
 
+    @jwt_required()
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
         """Update a place's information"""
+        current_user = get_jwt_identity()
         place_data = api.payload
         place = facade.get_place(place_id)
+
+        if place.owner_id != current_user:
+            return {'error': 'Unauthorized'}, 403
+
         if not place:
             return {'error': 'Place not found'}, 404
         try:
@@ -89,11 +103,18 @@ class PlaceAmenities(Resource):
     @api.response(200, 'Amenities added successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self, place_id):
+        current_user = get_jwt_identity()
+    
         amenities_data = api.payload
         if not amenities_data or len(amenities_data) == 0:
             return {'error': 'Invalid input data'}, 400
         
+        if place.owner_id != current_user:
+            return {'error': 'Unauthorized'}, 403
+
+
         place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
@@ -117,4 +138,3 @@ class PlaceReviewList(Resource):
         if not place:
             return {'error': 'Place not found'}, 404
         return [review.to_dict() for review in place.reviews], 200
-    
