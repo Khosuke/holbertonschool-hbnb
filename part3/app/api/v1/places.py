@@ -76,6 +76,7 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
     def put(self, place_id):
         """Update a place's information"""
         current_user = get_jwt_identity()
@@ -100,6 +101,7 @@ class PlaceAmenities(Resource):
     @api.response(200, 'Amenities added successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
     @jwt_required()
     def post(self, place_id):
         current_user = get_jwt_identity()
@@ -109,7 +111,7 @@ class PlaceAmenities(Resource):
             return {'error': 'Invalid input data'}, 400
         
         if place.owner_id != current_user:
-            return {'error': 'Unauthorized'}, 403
+            return {'error': 'Unauthorized action'}, 403
 
 
         place = facade.get_place(place_id)
