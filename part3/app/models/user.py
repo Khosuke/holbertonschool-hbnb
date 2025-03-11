@@ -1,6 +1,7 @@
 from .basemodel import BaseModel
 import re
 
+
 class User(BaseModel):
     emails = set()
 
@@ -12,11 +13,11 @@ class User(BaseModel):
         self.is_admin = is_admin
         self.places = []
         self.reviews = []
-    
+
     @property
     def first_name(self):
         return self.__first_name
-    
+
     @first_name.setter
     def first_name(self, value):
         if not isinstance(value, str):
@@ -55,7 +56,7 @@ class User(BaseModel):
     @property
     def is_admin(self):
         return self.__is_admin
-    
+
     @is_admin.setter
     def is_admin(self, value):
         if not isinstance(value, bool):
