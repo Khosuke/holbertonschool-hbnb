@@ -27,14 +27,14 @@ class ReviewList(Resource):
 
         if not place:
             return {'error': 'Place not found'}, 400
-        user = facade.get_user(review_data['user_id'])
-        if not user:
+        
+        if not current_user:
             return {'error': 'User not found'}, 400
-        if place.owner.id == user.id:
+        if place.owner.id == current_user:
             return {'error': 'User cannot review their own place'}, 400
     
         try:
-            new_review = facade.create_review(**review_data)
+            new_review = facade.create_review(review_data)
             return new_review.to_dict(), 201
         except Exception as e:
             return {'error': str(e)}, 400
@@ -67,6 +67,8 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
+        if review.user.id != current_user:
+            return {'error': 'Unauthorized action'}, 403
 
         try:
             facade.update_review(review_id, review_data)
@@ -76,6 +78,7 @@ class ReviewResource(Resource):
 
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
+    @api.response(403, 'Unauthorized action')
     @jwt_required()
     def delete(self, review_id):
         """Delete a review"""
@@ -83,7 +86,9 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        
+        if review.user.id != current_user:
+            return {'error': 'Unauthorized action'}, 403
+
         try:
             facade.delete_review(review_id)
             return {'message': 'Review deleted successfully'}, 200

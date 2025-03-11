@@ -69,6 +69,7 @@ class UserResource(Resource):
             return {"error": "You cannot change your email or password"}, 400
         
         user = facade.get_user(user_id)
+
         if not user:
             return {'error': 'User not found'}, 404
         try:
