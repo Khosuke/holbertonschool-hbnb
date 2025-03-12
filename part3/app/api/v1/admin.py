@@ -109,11 +109,10 @@ class AdminPlaceModify(Resource):
 
         # Set is_admin default to False if not exists
         is_admin = current_user.get('is_admin', False)
-        user_id = current_user.get('id')
+        if not current_user.get('is_admin'):
+            return {'error': 'Admin privileges required'}, 403
         place_data = api.payload
         place = facade.get_place(place_id)
-        if not is_admin and place.owner_id != user_id:
-            return {'error': 'Unauthorized action'}, 403
 
         if not place:
             return {'error': 'Place not found'}, 404
