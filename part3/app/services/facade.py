@@ -3,7 +3,7 @@ from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
-
+from app.services.repositories.user_repository import UserRepository
 class HBnBFacade:
     def __init__(self):
         self.user_repo = SQLAlchemyRepository()
@@ -14,6 +14,8 @@ class HBnBFacade:
     # USER
     def create_user(self, user_data):
         user = User(**user_data)
+        self.user_repo.add(user)
+        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
     
