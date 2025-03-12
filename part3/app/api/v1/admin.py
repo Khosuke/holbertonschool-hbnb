@@ -20,8 +20,8 @@ class AdminUserResource(Resource):
         if not current_user.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
 
-        data = api.payload
-        email = data.get('email')
+        user_data = api.payload
+        email = user_data.get('email')
 
         if email:
             # Check if email is already in use
@@ -32,7 +32,11 @@ class AdminUserResource(Resource):
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
-        return user.to_dict(), 200
+        try:
+            facade.update_user(user_id, user_data)
+            return user.to_dict(), 200
+        except Exception as e:
+            return {'error': str(e)}, 400
 
 
 @api.route('/users/')
@@ -48,10 +52,6 @@ class AdminUserCreate(Resource):
 
         # Check if email is already in use
         if facade.get_user_by_email(email):
-            return {'error': 'Email already registered'}, 400
-
-        existing_user = facade.get_user_by_email(user_data['email'])
-        if existing_user:
             return {'error': 'Email already registered'}, 400
 
         try:
