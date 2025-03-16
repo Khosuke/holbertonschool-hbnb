@@ -1,32 +1,22 @@
+from sqlalchemy.orm import relationship
 from app import db
-import uuid
 from .baseclass import BaseModel
 from app.models.user import User
+from app.models.amenity_place import amenity_place
+
 
 class Place(BaseModel):
-    """
-    __tablename__ = "Places"
-    
+    __tablename__ = "place"
+
     _title = db.Column(db.String(100), nullable=False)
     _description = db.Column(db.String(300), nullable=False)
     _price = db.Column(db.Float, nullable=False)
     _latitude = db.Column(db.Float, nullable=False)
     _longitude = db.Column(db.Float, nullable=False)
-    _owner = db.Column()
-    _reviews = db.Column(db.String(100), nullable=False)
-    _amenities = db.Column()
-    """
+    _owner_id = db.Column(db.String(36), db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    reviews = db.relationship('Review', backref=db.backref('review', lazy=True), lazy='subquery')
+    amenities = db.relationship('Amenity', secondary=amenity_place, backref=db.backref('places', lazy=True), lazy='subquery')
 
-    def __init__(self, title, price, latitude, longitude, owner, description=None):
-        super().__init__()
-        self.title = title
-        self.description = description
-        self.price = price
-        self.latitude = latitude
-        self.longitude = longitude
-        self.owner = owner
-        self.reviews = []  # List to store related reviews
-        self.amenities = []  # List to store related amenities
 
     @property
     def title(self):
@@ -40,6 +30,16 @@ class Place(BaseModel):
             raise TypeError("Title must be a string")
         super().is_max_length('title', value, 100)
         self._title = value
+
+    @property
+    def description(self):
+        return self._description
+    
+    @description.setter
+    def description(self, value):
+        if not isinstance(value, str):
+            raise TypeError("Description must be a string")
+        self._description = value
 
     @property
     def price(self):
@@ -77,46 +77,49 @@ class Place(BaseModel):
 
     @property
     def owner(self):
-        return self._owner
+        return self._owner_id
     
     @owner.setter
     def owner(self, value):
         if not isinstance(value, User):
             raise TypeError("Owner must be a user instance")
-        self._owner = value
+        self._owner_id = value
 
     def add_review(self, review):
         """Add a review to the place."""
         self.reviews.append(review)
+        db.session.commit()
     
     def delete_review(self, review):
         """Add an amenity to the place."""
         self.reviews.remove(review)
+        db.session.commit()
 
     def add_amenity(self, amenity):
         """Add an amenity to the place."""
         self.amenities.append(amenity)
+        db.session.commit()
 
     def to_dict(self):
         return {
             'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'price': self.price,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'owner_id': self.owner.id
+            'title': self._title,
+            'description': self._description,
+            'price': self._price,
+            'latitude': self._latitude,
+            'longitude': self._longitude,
+            'owner_id': self._owner_id
         }
     
     def to_dict_list(self):
         return {
             'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'price': self.price,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'owner': self.owner.to_dict(),
+            'title': self._title,
+            'description': self._description,
+            'price': self._price,
+            'latitude': self._latitude,
+            'longitude': self._longitude,
+            'owner_id': self._owner_id,
             'amenities': self.amenities,
             'reviews': self.reviews
         }

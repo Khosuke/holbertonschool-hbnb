@@ -1,16 +1,18 @@
 from .baseclass import BaseModel
+from app import db
 import re
 
 
 class User(BaseModel):
-    from app import db
     emails = set()
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     _first_name = db.Column(db.String(50), nullable=False)
     _last_name = db.Column(db.String(50), nullable=False)
     _email = db.Column(db.String(120), nullable=False, unique=True)
     _password = db.Column(db.String(128), nullable=False)
+    review = db.relationship('Review', backref='user', lazy=True)
+    place = db.relationship('Place', backref='user', lazy=True)
     _is_admin = db.Column(db.Boolean, default=False)
 
     @property
@@ -74,15 +76,18 @@ class User(BaseModel):
 
     def add_place(self, place):
         """Add an amenity to the place."""
-        self.places.append(place)
+        self.place.append(place)
+        db.session.commit()
 
     def add_review(self, review):
         """Add an amenity to the place."""
         self.reviews.append(review)
+        db.session.commit()
 
     def delete_review(self, review):
         """Add an amenity to the place."""
         self.reviews.remove(review)
+        db.session.commit()
 
     def hash_password(self, password):
         """Hashes the password before storing it."""

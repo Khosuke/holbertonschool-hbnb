@@ -1,13 +1,14 @@
-from .basemodel import BaseModel
+from .baseclass import BaseModel
+from app import db
 
 class Amenity(BaseModel):
-	def __init__(self, name):
-		super().__init__()	
-		self.name = name
+	__tablename__ = "amenity"
+
+	_name = db.Column(db.String(100), nullable=False)
 
 	@property
 	def name(self):
-		return self.__name
+		return self._name
 
 	@name.setter
 	def name(self, value):
@@ -16,7 +17,7 @@ class Amenity(BaseModel):
 		if not value:
 			raise ValueError("Name cannot be empty")
 		super().is_max_length('Name', value, 50)
-		self.__name = value
+		self._name = value
 
 	def update(self, data):
 		return super().update(data)

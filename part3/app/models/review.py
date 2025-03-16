@@ -1,18 +1,21 @@
-from .basemodel import BaseModel
+from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+from .baseclass import BaseModel
 from .place import Place
 from .user import User
+from app import db
 
 class Review(BaseModel):
-	def __init__(self, text, rating, place, user):
-		super().__init__()
-		self.text = text
-		self.rating = rating
-		self.place = place
-		self.user = user
-	
+	__tablename__ = "review"
+
+	_text = db.Column(db.String(100), nullable=False)
+	_rating = db.Column(db.Integer, nullable=False)
+	_place = db.Column(db.String(36), db.ForeignKey('place.id'), nullable=False)
+	_user = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+
 	@property
 	def text(self):
-		return self.__text
+		return self._text
 	
 	@text.setter
 	def text(self, value):
@@ -20,38 +23,38 @@ class Review(BaseModel):
 			raise ValueError("Text cannot be empty")
 		if not isinstance(value, str):
 			raise TypeError("Text must be a string")
-		self.__text = value
+		self._text = value
 
 	@property
 	def rating(self):
-		return self.__rating
+		return self._rating
 	
 	@rating.setter
 	def rating(self, value):
 		if not isinstance(value, int):
 			raise TypeError("Rating must be an integer")
 		super().is_between('Rating', value, 1, 6)
-		self.__rating = value
+		self._rating = value
 
 	@property
 	def place(self):
-		return self.__place
+		return self._place
 	
 	@place.setter
 	def place(self, value):
 		if not isinstance(value, Place):
 			raise TypeError("Place must be a place instance")
-		self.__place = value
+		self._place = value
 
 	@property
 	def user(self):
-		return self.__user
+		return self._user
 	
 	@user.setter
 	def user(self, value):
 		if not isinstance(value, User):
 			raise TypeError("User must be a user instance")
-		self.__user = value
+		self._user = value
 
 	def to_dict(self):
 		return {
