@@ -1,7 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from flask_jwt_extended import jwt_required, get_jwt_identity
-import logging
 
 api = Namespace('places', description='Place operations')
 
@@ -41,9 +40,6 @@ class PlaceList(Resource):
         place_data = api.payload
         place_data['_owner_id'] = current_user
 
-        print(f"Received data: {current_user}")
-        print(f"Type of received data: {type(current_user)}")
-
         if current_user is None or len(current_user) == 0:
             return {'error': 'Invalid input data.'}, 400
 
@@ -82,7 +78,7 @@ class PlaceResource(Resource):
         place_data = api.payload
         place = facade.get_place(place_id)
 
-        if place.owner.id != current_user:
+        if place._owner_id != current_user:
             return {'error': 'Unauthorized action'}, 403
 
         if not place:
@@ -109,7 +105,7 @@ class PlaceAmenities(Resource):
         if not amenities_data or len(amenities_data) == 0:
             return {'error': 'Invalid input data'}, 400
         
-        if place.owner_id != current_user:
+        if place._owner_id != current_user:
             return {'error': 'Unauthorized action'}, 403
 
 
