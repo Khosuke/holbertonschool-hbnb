@@ -1,11 +1,9 @@
-rom app.persistence.repository impo
-<<<<<<< HEAD
+from app.persistence.repository import InMemoryRepository
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
+from app.models.user import User
 
-=======
->>>>>>> 470e0e0 (debugg fatal)
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -19,7 +17,6 @@ class HBnBFacade:
         """
         user = User(**user_data)
         self.user_repo.add(user)
-<<<<<<< HEAD
         return user
     
     def get_all_users(self):
@@ -36,6 +33,8 @@ class HBnBFacade:
         return user if exist else leave error
         """
         user = self.user_repo.get(user_id)
+        if not user:
+            raise ValueError("User not found")
         return user
 
     def get_user_by_email(self, email):
@@ -44,14 +43,33 @@ class HBnBFacade:
         """
         return self.user_repo.get_by_attribute('email', email)
     
-
     def update_user(self, user_id, user_data):
         """
         update existing users
         """
+        user = self.user_repo.get(user_id)
+        if not user:
+            raise ValueError("User not found")
+            
         self.user_repo.update(user_id, user_data)
         updated_user = self.user_repo.get(user_id)
         return updated_user
+        
+    def put_user(self, user_id, update_data):
+        """
+        update existing users and
+        verify without deleted another existing value
+        """
+        user = self.user_repo.get(user_id)
+        if not user:
+            raise ValueError("User not found")
+
+        user["first_name"] = update_data.get("first_name", user["first_name"])
+        user["last_name"] = update_data.get("last_name", user["last_name"])
+        user["email"] = update_data.get("email", user["email"])
+
+        self.user_repo.update(user_id, user)
+        return user
 
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
@@ -129,39 +147,3 @@ class HBnBFacade:
 
     def delete_review(self, review_id):
         return self.review_repo.delete(review_id)
-=======
-        return user_data        
-
-    def get_user_by_email(self, email):
-        return self.user_repo.get_by_attribute('email', email)
-    
-    def get_place(self, place_id):
-
-        pass
-
-    def get_user(self, user_id):
-        """
-        get user by ID
-        return user if exist else leave error
-        """
-        user = self.user_repo.get(user_id)
-        if not user:
-            raise ValueError("User not found")
-        return user
-
-    def put_user(self, user_id, update_data):
-        """
-        update existing users and
-        verify without deleted another existing value
-        """
-        user = self.user_repo.get(user_id)
-        if not user:
-            raise ValueError("User not found")
-
-        user["first_name"] = update_data.get("first_name", user["first_name"])
-        user["last_name"] = update_data.get("last_name", user["last_name"])
-        user["email"] = update_data.get("email", user["email"])
-
-        self.user_repo.update(user_id, user)
-        return user
->>>>>>> 470e0e0 (debugg fatal)
