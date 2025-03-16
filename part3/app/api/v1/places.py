@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
+import logging
 
 api = Namespace('places', description='Place operations')
 
@@ -26,8 +26,7 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
     'owner_id': fields.String(description='ID of the owner'),
-    'owner': fields.Nested(user_model, description='Owner details'),
-    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
+    'amenities': fields.List(fields.String, description="List of amenities ID's")
 })
 
 @api.route('/')
@@ -36,12 +35,14 @@ class PlaceList(Resource):
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
     @jwt_required()
-    @api.expect(place_model)
     def post(self):
         """Register a new place"""
         current_user = get_jwt_identity()
         place_data = api.payload
-        place_data['owner_id'] = current_user
+        place_data['_owner_id'] = current_user
+
+        print(f"Received data: {current_user}")
+        print(f"Type of received data: {type(current_user)}")
 
         if current_user is None or len(current_user) == 0:
             return {'error': 'Invalid input data.'}, 400
