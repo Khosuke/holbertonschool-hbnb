@@ -89,3 +89,44 @@ Saïd Laamri, email: <9848@holbertonstudents.com><br>
 Vithushan Satkunanathan, email: <9880@holbertonstudents.com>
 ## License
 This project is licensed under the MIT License.
+
+```mermaid
+erDiagram
+    ... erDiagram
+    USER {
+        int id
+        string first_name
+        string last_name
+        string email
+        string password
+        boolean is_admin
+    }
+
+    PLACE {
+        int id
+        string title
+        string description
+        float price
+        float longitude
+        float latitude
+        int owner_id
+    }
+
+    REVIEW {
+        int id
+        string text
+        int rating
+        int user_id
+        int place_id
+    }
+
+    AMENITY {
+        int id
+        string name
+    }
+
+    USER ||--o{ PLACE : owns
+    USER ||--o{ REVIEW : writes
+    PLACE ||--o{ REVIEW : receives
+    PLACE ||--o{ PLACE_AMENTIY : has
+    AMENITY ||--o{ PLACE_AMENITY : is_available_in
