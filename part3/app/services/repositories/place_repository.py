@@ -16,3 +16,6 @@ class PlaceRepository(SQLAlchemyRepository):
 
         db.session.add(place)
         db.session.commit()
+        
+    def get(self, place_id):
+        return db.session.query(self.model).filter_by(id=place_id).first()
