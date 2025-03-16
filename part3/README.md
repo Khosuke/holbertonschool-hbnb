@@ -78,9 +78,8 @@ Install the dependencies using:
 ```bash
 pip install -r requirements.txt
 ```
-### Future Enhancements
-- Implement the Persistence layer using SQL Alchemy.
-- Add more API endpoints for additional functionalities.
+### Entity-Relationship (ER) diagram:
+
 ## Requirements
 List all the Python packages needed for the project in `requirements.txt`.
 ## Contributors
