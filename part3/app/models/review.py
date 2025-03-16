@@ -10,8 +10,8 @@ class Review(BaseModel):
 
 	_text = db.Column(db.String(100), nullable=False)
 	_rating = db.Column(db.Integer, nullable=False)
-	_place = db.Column(db.String(36), db.ForeignKey('place.id'), nullable=False)
-	_user = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+	_place = db.Column(db.String(36), db.ForeignKey('place.id', ondelete="CASCADE"), nullable=False)
+	_user = db.Column(db.String(36), db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
 
 
 	@property

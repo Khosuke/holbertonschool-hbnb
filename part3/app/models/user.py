@@ -11,8 +11,8 @@ class User(BaseModel):
     _last_name = db.Column(db.String(50), nullable=False)
     _email = db.Column(db.String(120), nullable=False, unique=True)
     _password = db.Column(db.String(128), nullable=False)
-    review = db.relationship('Review', backref='user', lazy=True)
-    place = db.relationship('Place', backref='user', lazy=True)
+    review = db.relationship('Review', backref='user', lazy=True, cascade="all, delete-orphan")
+    place = db.relationship('Place', backref='user', lazy=True, cascade="all, delete-orphan")
     _is_admin = db.Column(db.Boolean, default=False)
 
     @property
