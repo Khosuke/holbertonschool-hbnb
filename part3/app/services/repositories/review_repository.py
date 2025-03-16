@@ -1,4 +1,3 @@
-from app.models.review import Review
 from app.persistence.repository import SQLAlchemyRepository
 
 class ReviewRepository(SQLAlchemyRepository):

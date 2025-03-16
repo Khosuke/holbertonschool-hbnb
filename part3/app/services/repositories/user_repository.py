@@ -1,4 +1,3 @@
-from app.models.user import User
 from app.persistence.repository import SQLAlchemyRepository
 
 class UserRepository(SQLAlchemyRepository):
@@ -6,4 +5,4 @@ class UserRepository(SQLAlchemyRepository):
         super().__init__(model)
 
     def get_user_by_email(self, email):
-        return self.model.query.filter_by(email=email).first()
+        return self.model.query.filter_by(_email=email).first()
