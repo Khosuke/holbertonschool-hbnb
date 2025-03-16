@@ -93,6 +93,7 @@ This project is licensed under the MIT License.
 ```mermaid
 erDiagram
     ... erDiagram
+    erDiagram
     USER {
         int id
         string first_name
@@ -125,8 +126,14 @@ erDiagram
         string name
     }
 
+    PLACE_AMENITY {
+        int place_id
+        int amenity_id
+    }
+
     USER ||--o{ PLACE : owns
     USER ||--o{ REVIEW : writes
     PLACE ||--o{ REVIEW : receives
     PLACE ||--o{ PLACE_AMENITY : has
     AMENITY ||--o{ PLACE_AMENITY : is_available_in
+
