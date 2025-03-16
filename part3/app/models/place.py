@@ -120,6 +120,6 @@ class Place(BaseModel):
             'latitude': self._latitude,
             'longitude': self._longitude,
             'owner_id': self._owner_id,
-            'amenities': self.amenities,
-            'reviews': self.reviews
+            'amenities': [amenity.to_dict() for amenity in self.amenities],
+            'reviews': [review.to_dict() for review in self.reviews]
         }
