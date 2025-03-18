@@ -8,12 +8,11 @@ class PlaceRepository(SQLAlchemyRepository):
 
     def add_amenities(self, place, amenities):
         for amenity_id in amenities:
-            amenity = db.session.query(Amenity).get(amenity_id)
+            amenity = db.session.get(Amenity, amenity_id)
             if not amenity:
                 raise KeyError('Invalid input data')
             else:
                 place.amenities.append(amenity)
-
         db.session.add(place)
         db.session.commit()
         
