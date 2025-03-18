@@ -46,8 +46,10 @@ class SQLAlchemyRepository(Repository):
         obj = self.get(obj_id)
         if obj:
             for key, value in data.items():
-                setattr(obj, key, value)
+                if hasattr(obj, key):
+                    setattr(obj, key, value)
             db.session.commit()
+        return obj
 
     def delete(self, obj_id):
         from app import db
