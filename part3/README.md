@@ -42,6 +42,7 @@ hbnb/
 <b>The persistence/</b> subdirectory is where the in-memory repository is implemented. This will later be replaced by a database-backed solution using SQL Alchemy.<br>
 <b>run.py</b> is the entry point for running the Flask application.<br>
 <b>config.py</b> will be used for configuring environment variables and application settings.<br>
+
 <b>requirements.txt</b> will list all the Python packages needed for the project.<br>
 <b>README.md</b> will contain a brief overview of the project.<br>
 ### Setup Instructions
@@ -78,7 +79,14 @@ Install the dependencies using:
 ```bash
 pip install -r requirements.txt
 ```
-### Entity-Relationship (ER) diagram:
+### Future Enhancements
+- Implement the Persistence layer using SQL Alchemy.
+- Add more API endpoints for additional functionalities.
+## Entity-Relationship (ER) Diagram
+
+This is an ER diagram for the project:
+
+![ER Diagram](HBnB_ER_Diagram_Part3.png)
 
 ## Requirements
 List all the Python packages needed for the project in `requirements.txt`.
