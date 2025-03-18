@@ -46,7 +46,7 @@ class HBnBFacade:
         return self.amenity_repo.get_all()
 
     def update_amenity(self, amenity_id, amenity_data):
-        self.amenity_repo.update(amenity_id, amenity_data)
+        return self.amenity_repo.update(amenity_id, amenity_data)
 
     # PLACE
     def create_place(self, place_data):        
@@ -69,21 +69,18 @@ class HBnBFacade:
         return self.place_repo.get_all()
 
     def update_place(self, place_id, place_data):
-        self.place_repo.update(place_id, place_data)
+
+        return self.place_repo.update(place_id, place_data)
 
     # REVIEWS
     def create_review(self, review_data):
-        user = self.user_repo.get(review_data['user_id'])
+        user = self.user_repo.get(review_data['_user'])
         if not user:
             raise KeyError('Invalid input data')
-        del review_data['user_id']
-        review_data['user'] = user
-        
-        place = self.place_repo.get(review_data['place_id'])
+
+        place = self.place_repo.get(review_data['_place'])
         if not place:
             raise KeyError('Invalid input data')
-        del review_data['place_id']
-        review_data['place'] = place
 
         review = Review(**review_data)
         self.review_repo.add(review)
@@ -109,8 +106,8 @@ class HBnBFacade:
     def delete_review(self, review_id):
         review = self.review_repo.get(review_id)
         
-        user = self.user_repo.get(review.user.id)
-        place = self.place_repo.get(review.place.id)
+        user = self.user_repo.get(review._user)
+        place = self.place_repo.get(review._place)
 
         user.delete_review(review)
         place.delete_review(review)
