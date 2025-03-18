@@ -9,8 +9,7 @@ api = Namespace('reviews', description='Review operations')
 review_model = api.model('Review', {
     'text': fields.String(required=True, description='Text of the review'),
     'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
-    'user_id': fields.String(required=True, description='ID of the user'),
-    'place_id': fields.String(required=True, description='ID of the place')
+    '_place': fields.String(required=True, description='ID of the place')
 })
 
 @api.route('/')
@@ -23,14 +22,14 @@ class ReviewList(Resource):
         """Register a new review"""
         current_user = get_jwt_identity()
         review_data = api.payload
-        place = facade.get_place(review_data['place_id'])
+        review_data['_user'] = current_user
+        place = facade.get_place(review_data['_place'])
 
         if not place:
             return {'error': 'Place not found'}, 400
-        
         if not current_user:
             return {'error': 'User not found'}, 400
-        if place.owner.id == current_user:
+        if place._owner_id == current_user:
             return {'error': 'User cannot review their own place'}, 400
     
         try:
@@ -66,9 +65,10 @@ class ReviewResource(Resource):
         current_user = get_jwt_identity()
         review_data = api.payload
         review = facade.get_review(review_id)
+        review_data["_user"] = current_user
         if not review:
             return {'error': 'Review not found'}, 404
-        if review.user.id != current_user:
+        if review._user != current_user:
             return {'error': 'Unauthorized action'}, 403
 
         try:
@@ -87,7 +87,7 @@ class ReviewResource(Resource):
         review = facade.get_review(review_id)
         if not review:
             return {'error': 'Review not found'}, 404
-        if review.user.id != current_user:
+        if review._user != current_user:
             return {'error': 'Unauthorized action'}, 403
 
         try:

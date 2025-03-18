@@ -78,15 +78,15 @@ class PlaceResource(Resource):
         place_data = api.payload
         place = facade.get_place(place_id)
 
-        if place._owner_id != current_user:
+        if place._owner_id != str(current_user):
             return {'error': 'Unauthorized action'}, 403
 
         if not place:
             return {'error': 'Place not found'}, 404
 
         try:
-            facade.update_place(place_id, place_data)
-            return {'message': 'Place updated successfully'}, 200
+            updated_place = facade.update_place(place_id, place_data)
+            return updated_place.to_dict_list(), 200
         except Exception as e:
             return {'error': str(e)}, 400
 
@@ -105,16 +105,16 @@ class PlaceAmenities(Resource):
         if not amenities_data or len(amenities_data) == 0:
             return {'error': 'Invalid input data'}, 400
         
+        place = facade.get_place(place_id)
+
         if place._owner_id != current_user:
             return {'error': 'Unauthorized action'}, 403
 
-
-        place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
         
-        for amenity in amenities_data:
-            a = facade.get_amenity(amenity['id'])
+        for amenity in amenities_data["amenities"]:
+            a = facade.get_amenity(amenity)
             if not a:
                 return {'error': 'Invalid input data'}, 400
         
