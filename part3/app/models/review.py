@@ -1,5 +1,3 @@
-from sqlalchemy import Table, Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
 from .baseclass import BaseModel
 from .place import Place
 from .user import User
@@ -62,6 +60,6 @@ class Review(BaseModel):
 			'id': self.id,
 			'text': self._text,
 			'rating': self._rating,
-			'place_id': self._place.id,
-			'user_id': self._user.id
+			'place_id': self._place,
+			'user_id': self._user
 		}

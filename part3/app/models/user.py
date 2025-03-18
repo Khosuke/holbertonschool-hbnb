@@ -11,8 +11,8 @@ class User(BaseModel):
     _last_name = db.Column(db.String(50), nullable=False)
     _email = db.Column(db.String(120), nullable=False, unique=True)
     _password = db.Column(db.String(128), nullable=False)
-    review = db.relationship('Review', backref='user', lazy=True, cascade="all, delete-orphan")
-    place = db.relationship('Place', backref='user', lazy=True, cascade="all, delete-orphan")
+    reviews = db.relationship('Review', backref='user', lazy=True, cascade="all, delete-orphan")
+    places = db.relationship('Place', backref='user', lazy=True, cascade="all, delete-orphan")
     _is_admin = db.Column(db.Boolean, default=False)
 
     @property
@@ -76,7 +76,7 @@ class User(BaseModel):
 
     def add_place(self, place):
         """Add an amenity to the place."""
-        self.place.append(place)
+        self.places.append(place)
         db.session.commit()
 
     def add_review(self, review):
