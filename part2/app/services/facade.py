@@ -11,118 +11,89 @@ class HBnBFacade:
         self.review_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
 
+    # User Methods
     def create_user(self, user_data):
-        """
-        create a new user and store in memory
-        """
+        """Create a new user and store in memory."""
         user = User(**user_data)
         self.user_repo.add(user)
         return user
     
     def get_all_users(self):
-        """
-        get a list of all users
-        """
-        list = self.user_repo.get_all()
-        user_list = [user.to_dict() for user in list]
-        return user_list
+        """Get a list of all users."""
+        users = self.user_repo.get_all()
+        return [user.to_dict() for user in users]
 
     def get_user(self, user_id):
-        """
-        get user by ID
-        return user if exist else leave error
-        """
-        user = self.user_repo.get(user_id)
-        return user
+        """Get user by ID."""
+        return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
-        """
-        Fetch user by email 
-        """
+        """Fetch user by email."""
         return self.user_repo.get_by_attribute('email', email)
     
-
     def update_user(self, user_id, user_data):
-        """
-        update existing users
-        """
+        """Update existing user."""
         self.user_repo.update(user_id, user_data)
-        updated_user = self.user_repo.get(user_id)
-        return updated_user
+        return self.user_repo.get(user_id)
 
+    # Amenity Methods
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
         self.amenity_repo.add(amenity)
         return amenity
 
     def get_amenity(self, amenity_id):
-        amenity = self.amenity_repo.get(amenity_id)
-        return amenity
+        return self.amenity_repo.get(amenity_id)
 
     def get_all_amenities(self):
-        list = self.amenity_repo.get_all()
-        amenity_list = [amenity.to_dict() for amenity in list]
-        return amenity_list
+        amenities = self.amenity_repo.get_all()
+        return [amenity.to_dict() for amenity in amenities]
 
     def update_amenity(self, amenity_id, amenity_data):
-            self.amenity_repo.update(amenity_id, amenity_data)
-            updated_amenity = self.amenity_repo.get(amenity_id)
-            return updated_amenity
+        self.amenity_repo.update(amenity_id, amenity_data)
+        return self.amenity_repo.get(amenity_id)
 
+    # Place Methods
     def create_place(self, place_data):
-        """
-        create place
-        """
+        """Create a new place."""
         place = Place(**place_data)
         self.place_repo.add(place)
         return place
 
     def get_place(self, place_id):
-        """
-        get place by ID
-        """
-        place = self.place_repo.get(place_id)
-        return place
+        """Get place by ID."""
+        return self.place_repo.get(place_id)
 
     def get_all_places(self):
-        """
-        get all places
-        """
-        list = self.place_repo.get_all()
-        place_list = [place.to_dict() for place in list]
-        return place_list
+        """Get all places."""
+        places = self.place_repo.get_all()
+        return [place.to_dict() for place in places]
 
     def update_place(self, place_id, place_data):
-        """
-        update existing  places
-        """
+        """Update an existing place."""
         self.place_repo.update(place_id, place_data)
-        updated_place = self.place_repo.get(place_id)
-        return updated_place
+        return self.place_repo.get(place_id)
 
+    # Review Methods
     def create_review(self, review_data):
         review = Review(**review_data)
         self.review_repo.add(review)
         return review
 
     def get_review(self, review_id):
-        review = self.review_repo.get(review_id)
-        return review
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        list = self.review_repo.get_all()
-        review_list = [review.to_dict() for review in list]
-        return review_list
+        reviews = self.review_repo.get_all()
+        return [review.to_dict() for review in reviews]
 
     def get_reviews_by_place(self, place_id):
         place = self.place_repo.get(place_id)
-        place_reviews = place.to_dict()['reviews']
-        return place_reviews
+        return place.reviews if place else []
 
     def update_review(self, review_id, review_data):
         self.review_repo.update(review_id, review_data)
-        updated_review = self.review_repo.get(review_id)
-        return updated_review
+        return self.review_repo.get(review_id)
 
     def delete_review(self, review_id):
         return self.review_repo.delete(review_id)
