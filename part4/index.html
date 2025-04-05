@@ -1,31 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List of Places</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="login.html" id="login-link">Login</a>
-        </nav>
-    </header>
-    <main>
-        <section id="filter">
-            <label for="price-filter">Max Price:</label>
-            <select id="price-filter">
-                <!-- Options will be populated dynamically -->
-            </select>
-        </section>
-        <section id="places-list">
-            <!-- List of places will be populated dynamically -->
-        </section>
-    </main>
-    <footer>
-        <small>all rights reserved.</small>
-    </footer>
-    <script src="scripts.js"></script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>List of Places</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="index.html">
+                    <img src="images/logo.png" alt="hbnb logo" class="logo">
+                </a>
+                <a href="login.html" class="login-button">Login</a>
+            </nav>
+        </header>
+
+        <main>
+            <section id="filter">
+                <label for="price-filter">Max Price:</label>
+                <select id="price-filter">
+                    <option value="100">$100</option>
+                    <option value="150">$150</option>
+                    <option value="200">$200</option>
+                </select>
+            </section>
+
+            <h1>Available Places</h1>
+            <section id="places-list">
+                <div class="place-card">
+                    <h3>Beautiful Beach House</h3>
+                    <p><strong>Price per night:</strong> $150</p>
+                    <a href="place.html" class="details-button">View Details</a>
+                </div>
+
+                <div class="place-card">
+                    <h3>Cozy Cabin</h3>
+                    <p><strong>Price per night:</strong> $100</p>
+                    <a href="place.html" class="details-button">View Details</a>
+                </div>
+
+                <div class="place-card">
+                    <h3>Modern Apartment</h3>
+                    <p><strong>Price per night:</strong> $200</p>
+                    <a href="place.html" class="details-button">View Details</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <small>all rights reserved.</small>
+        </footer>
+
+        <script src="scripts.js"></script>
+    </body>
 </html>
