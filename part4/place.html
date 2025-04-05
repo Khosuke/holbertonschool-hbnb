@@ -5,36 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Place Details</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/icon.png" type="image/png">
+
 </head>
 <body>
     <header>
         <nav>
             <a href="index.html">
-                <img src="images/logo.png" alt="hbnb logo" class="logo">
+                <img src="images/logo.png" alt="HBnB logo" class="logo">
             </a>
             <a href="login.html" class="login-button">Login</a>
         </nav>
     </header>
     <main>
-        <section id="place-details">
             <!-- Place details will be populated dynamically -->
+            <section class="places-details">
+                <div class="place-info">
+                    <h1>Beautiful Beach House</h1>
+                    <p><strong>Host:</strong> John Doe</p><br>
+                    <p><strong>Price per night:</strong> $150</p><br>
+                    <p><strong>Description:</strong> A beautiful beach house with amazing views...</p><br>
+                    <p><strong>Amenities:</strong> WiFi, Pool, Air conditioning</p> 
+                </div>
+            </section>
+
+            <section class="reviews">
+            <div class="review-card">
+                <h2>Reviews</h2>
+                <p><strong>Jane Smith:</strong><br>Great place to stay!</p>
+                <p>Rating: ★★★★☆</p>
+            </div>
+            <div class="review-card">
+                <p><strong>Robert Brown:</strong><br>Amazing location and very comfortable</p>
+                <p>Rating: ★★★★★</p>
+
+            </div>
         </section>
-        <section id="reviews">
-            <!-- Reviews will be populated dynamically -->
-        </section>
-        <section id="add-review">
-            <h2>Add a Review</h2>
-            <form id="review-form">
-                <label for="review-text">Review:</label>
-                <textarea id="review-text" name="review-text" required></textarea>
-                
-                <button type="submit">Submit</button>
-            </form>
+
+        <section class="add-review">
+            <h3>Add a Review</h3>
+            <a href="add_review.html" class="details-button">Add Review</a>
         </section>
     </main>
+
     <footer>
-        <small>all rights reserved.</small>
+        <small>©2024 HBnB Evolution. all rights reserved.</small>
     </footer>
+
     <script src="scripts.js"></script>
 </body>
 </html>

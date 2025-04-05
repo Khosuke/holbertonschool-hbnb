@@ -30,3 +30,22 @@ nav a {
 main {
     padding: 2rem;
 }
+
+.places-list {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.place-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+
+footer {
+    color: rgb(82, 85, 89);
+}
